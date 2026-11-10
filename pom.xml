@@ -13,7 +13,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
-        <exec.mainClass>com.fitaccess.App</exec.mainClass>
+        <exec.mainClass>com.mycompany.fitaccess.App
+</exec.mainClass>
         <!-- Solo se descargan las librerias nativas de Windows 64 bits (ahorra mas de 1 GB) -->
         <plataforma>windows-x86_64</plataforma>
         <javacv.version>1.5.10</javacv.version>
