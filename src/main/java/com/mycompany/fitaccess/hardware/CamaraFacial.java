@@ -21,6 +21,8 @@ import static org.bytedeco.opencv.global.opencv_imgproc.cvtColor;
 import static org.bytedeco.opencv.global.opencv_imgproc.equalizeHist;
 import static org.bytedeco.opencv.global.opencv_imgproc.rectangle;
 import static org.bytedeco.opencv.global.opencv_imgproc.resize;
+import org.bytedeco.javacv.FrameGrabber;
+
 
 /**
  * Abre la camara (DroidCam aparece como una webcam normal), detecta el rostro con
@@ -59,10 +61,17 @@ public class CamaraFacial {
         if (detector.empty()) {
             throw new IllegalStateException("No se encontro " + rutaCascade());
         }
-        camara = new OpenCVFrameGrabber(Config.getInt("camara.indice", 0));
-        camara.setImageWidth(640);
-        camara.setImageHeight(480);
-        camara.start();
+    int indice = Config.getInt("camara.indice", 0);
+
+camara = new OpenCVFrameGrabber(indice);
+camara.setImageMode(FrameGrabber.ImageMode.COLOR);
+camara.setImageWidth(640);
+camara.setImageHeight(480);
+camara.setFrameRate(30);
+camara.start();
+
+
+
         activa = true;
         hilo = new Thread(() -> bucle(oyente), "camara-fitaccess");
         hilo.setDaemon(true);
