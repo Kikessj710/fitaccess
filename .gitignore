@@ -1,0 +1,14 @@
+# Compilacion
+target/
+
+# NetBeans (configuracion personal de cada uno)
+nbproject/private/
+nbactions.xml
+nb-configuration.xml
+
+# Datos biometricos y modelo entrenado: NUNCA al repositorio
+rostros/
+
+# Reportes generados y logs
+reportes_generados/
+*.log
