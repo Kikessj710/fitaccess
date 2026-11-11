@@ -1,6 +1,7 @@
 package com.mycompany.fitaccess.reportes;
 
 import com.mycompany.fitaccess.util.Conexion;
+import com.mycompany.fitaccess.servicio.ConfiguracionService;
 import java.io.File;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -44,6 +45,11 @@ public class GeneradorReportes {
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("MES", mes);
             parametros.put("ANIO", anio);
+            parametros.put("NOMBRE_GIMNASIO", ConfiguracionService.obtener().getNombre());
+            parametros.put("DIRECCION_GIMNASIO", ConfiguracionService.obtener().getDireccion());
+            parametros.put("TELEFONO_GIMNASIO", ConfiguracionService.obtener().getTelefono());
+            parametros.put("CORREO_GIMNASIO", ConfiguracionService.obtener().getCorreo());
+            parametros.put("LOGO_GIMNASIO", ConfiguracionService.obtener().getLogoRuta());
             return JasperFillManager.fillReport(reporte, parametros, cn);
         }
     }

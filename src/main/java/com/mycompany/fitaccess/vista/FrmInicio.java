@@ -1,6 +1,7 @@
 package com.mycompany.fitaccess.vista;
 
 import com.mycompany.fitaccess.hardware.ArduinoPuerto;
+import com.mycompany.fitaccess.servicio.ConfiguracionService;
 import com.mycompany.fitaccess.util.Conexion;
 import com.mycompany.fitaccess.util.Estilo;
 import java.awt.BorderLayout;
@@ -24,7 +25,7 @@ public class FrmInicio extends JFrame {
     private final JLabel lblEstado = Estilo.etiqueta(" ");
 
     public FrmInicio() {
-        Estilo.ventana(this, "Inicio", 900, 600);
+        Estilo.ventana(this, ConfiguracionService.nombreGimnasio(), 900, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -33,7 +34,7 @@ public class FrmInicio extends JFrame {
         Estilo.transparente(centro);
 
         JLabel logo = Estilo.logo(56);
-        JLabel lema = Estilo.subtitulo("Control de acceso inteligente para tu gimnasio");
+        JLabel lema = Estilo.subtitulo(ConfiguracionService.obtener().getMensajeBienvenida());
         JButton btnLogin = Estilo.boton("Iniciar sesion con mi rostro");
         JButton btnRegistro = Estilo.botonSecundario("Registrarme");
         JButton btnAdmin = Estilo.botonSecundario("Entrar como administrador");

@@ -53,7 +53,9 @@ public class FrmMenuAdmin extends JFrame {
         modulos.add(modulo("Pagos y planes", FrmPagos::new));
         modulos.add(modulo("Reportes PDF", FrmReportes::new));
         modulos.add(modulo("Registrar cliente", FrmRegistro::new));
-        modulos.add(modulo("Versiones (Git)", FrmAcercaDe::new));
+        modulos.add(modulo("Configuración", FrmConfiguracion::new));
+
+
         add(modulos, BorderLayout.CENTER);
 
         btnSalir.addActionListener(e -> {
