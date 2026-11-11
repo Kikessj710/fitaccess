@@ -85,27 +85,48 @@ public class FrmCalendario extends JFrame {
             Estilo.error(this, ex.getMessage());
             return;
         }
-        LocalDate hoy = LocalDate.now();
-        int habiles = 0;
-        int vino = 0;
-        for (int dia = 1; dia <= mes.lengthOfMonth(); dia++) {
-            LocalDate f = mes.atDay(dia);
-            Color color;
-            if (asistidos.contains(f)) {
-                color = Estilo.VERDE;
-            } else if (f.isAfter(hoy) || !Config.abre(f)) {
-                color = new Color(0x2A2E37);
-            } else if (f.equals(hoy)) {
-                color = Estilo.PANEL;   // hoy todavia puede venir
-            } else {
-                color = Estilo.ROJO;
-            }
-            if (Config.abre(f) && !f.isAfter(hoy)) {
-                habiles++;
-                if (asistidos.contains(f)) {
-                    vino++;
-                }
-            }
+          LocalDate hoy = LocalDate.now();
+
+LocalDate fechaRegistro = cliente.getFechaRegistro() == null
+        ? hoy
+        : cliente.getFechaRegistro().toLocalDate();
+
+int habiles = 0;
+int vino = 0;
+
+for (int dia = 1; dia <= mes.lengthOfMonth(); dia++) {
+    LocalDate f = mes.atDay(dia);
+    Color color;
+
+    boolean antesDelRegistro = f.isBefore(fechaRegistro);
+    boolean futuro = f.isAfter(hoy);
+    boolean cerrado = !Config.abre(f);
+
+    if (antesDelRegistro || futuro || cerrado) {
+        // La persona todavía no pertenecía al gimnasio,
+        // el día aún no llega o el gimnasio estaba cerrado.
+        color = new Color(0x2A2E37);
+    } else if (asistidos.contains(f)) {
+        color = Estilo.VERDE;
+    } else if (f.equals(hoy)) {
+        // Hoy todavía puede asistir.
+        color = Estilo.PANEL;
+    } else {
+        // Solo se marca como falta después del registro.
+        color = Estilo.ROJO;
+    }
+
+    if (!antesDelRegistro
+            && Config.abre(f)
+            && !f.isAfter(hoy)) {
+        habiles++;
+
+        if (asistidos.contains(f)) {
+            vino++;
+        }
+    }
+
+      
             JLabel celda = new JLabel(String.valueOf(dia), SwingConstants.CENTER);
             celda.setOpaque(true);
             celda.setBackground(color);
