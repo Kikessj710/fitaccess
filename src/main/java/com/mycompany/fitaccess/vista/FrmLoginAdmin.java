@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import com.mycompany.fitaccess.util.Validaciones;
+
 
 /** Login del administrador con usuario y contrasena cifrada (BCrypt). */
 public class FrmLoginAdmin extends JFrame {
@@ -58,10 +60,24 @@ public class FrmLoginAdmin extends JFrame {
     private void ingresar() {
         String usuario = txtUsuario.getText().trim();
         String clave = new String(txtClave.getPassword());
-        if (usuario.isEmpty() || clave.isEmpty()) {
-            Estilo.error(this, "Ingrese usuario y contrasena");
-            return;
-        }
+       if (!Validaciones.textoObligatorio(usuario)) {
+    Estilo.error(this, "Ingrese el usuario");
+    txtUsuario.requestFocus();
+    return;
+}
+
+if (!Validaciones.textoObligatorio(clave)) {
+    Estilo.error(this, "Ingrese la contrasena");
+    txtClave.requestFocus();
+    return;
+}
+
+if (!Validaciones.usuarioValido(usuario)) {
+    Estilo.error(this, "El usuario solo puede tener letras, numeros y guion bajo");
+    txtUsuario.requestFocus();
+    return;
+}
+
         try {
             Admin admin = adminDAO.buscarPorUsuario(usuario);
             if (admin != null && Hash.verificar(clave, admin.getClaveHash())) {
