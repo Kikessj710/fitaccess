@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="ingresos_mensuales" pageWidth="595" pageHeight="842" columnWidth="535"
-              leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30">
-    <parameter name="MES" class="java.lang.Integer"/>
-    <parameter name="ANIO" class="java.lang.Integer"/>
-    <queryString>
-        <![CDATA[SELECT p.id,
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ingresos_mensuales" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30" uuid="be61dd08-727a-4080-a32d-8538f02c4be7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="MES" class="java.lang.Integer"/>
+	<parameter name="ANIO" class="java.lang.Integer"/>
+	<parameter name="NOMBRE_GIMNASIO" class="java.lang.String"/>
+	<parameter name="DIRECCION_GIMNASIO" class="java.lang.String"/>
+	<parameter name="TELEFONO_GIMNASIO" class="java.lang.String"/>
+	<parameter name="CORREO_GIMNASIO" class="java.lang.String"/>
+	<parameter name="LOGO_GIMNASIO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT p.id,
        DATE_FORMAT(p.fecha, '%d/%m/%Y') AS fecha,
        CONCAT(c.nombres, ' ', c.apellidos) AS cliente,
        pl.nombre AS plan,
@@ -21,112 +25,222 @@ JOIN suscripcion s ON s.id = p.suscripcion_id
 JOIN plan pl ON pl.id = s.plan_id
 WHERE MONTH(p.fecha) = $P{MES} AND YEAR(p.fecha) = $P{ANIO}
 ORDER BY p.fecha]]>
-    </queryString>
-    <field name="id" class="java.lang.Integer"/>
-    <field name="fecha" class="java.lang.String"/>
-    <field name="cliente" class="java.lang.String"/>
-    <field name="plan" class="java.lang.String"/>
-    <field name="monto_base" class="java.math.BigDecimal"/>
-    <field name="porcentaje_descuento" class="java.math.BigDecimal"/>
-    <field name="monto_final" class="java.math.BigDecimal"/>
-    <field name="metodo" class="java.lang.String"/>
-    <variable name="TOTAL_BASE" class="java.math.BigDecimal" calculation="Sum">
-        <variableExpression><![CDATA[$F{monto_base}]]></variableExpression>
-    </variable>
-    <variable name="TOTAL_FINAL" class="java.math.BigDecimal" calculation="Sum">
-        <variableExpression><![CDATA[$F{monto_final}]]></variableExpression>
-    </variable>
-    <title>
-        <band height="70">
-            <rectangle>
-                <reportElement x="0" y="0" width="535" height="56" backcolor="#111318"/>
-                <graphicElement><pen lineWidth="0"/></graphicElement>
-            </rectangle>
-            <staticText>
-                <reportElement x="14" y="6" width="300" height="26" forecolor="#FF7A1A"/>
-                <textElement><font size="18" isBold="true"/></textElement>
-                <text><![CDATA[FITACCESS]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="14" y="30" width="300" height="20" forecolor="#FFFFFF"/>
-                <textElement><font size="11"/></textElement>
-                <text><![CDATA[Ingresos del mes con descuentos por constancia]]></text>
-            </staticText>
-            <textField>
-                <reportElement x="320" y="18" width="200" height="20" forecolor="#FFFFFF"/>
-                <textElement textAlignment="Right"><font size="12" isBold="true"/></textElement>
-                <textFieldExpression><![CDATA["Mes " + String.format("%02d", $P{MES}) + " / " + $P{ANIO}]]></textFieldExpression>
-            </textField>
-        </band>
-    </title>
-    <columnHeader>
-        <band height="24">
-            <rectangle>
-                <reportElement x="0" y="0" width="535" height="22" backcolor="#EEEEEE"/>
-                <graphicElement><pen lineWidth="0"/></graphicElement>
-            </rectangle>
-            <staticText><reportElement x="4" y="3" width="30" height="16"/><textElement><font isBold="true"/></textElement><text><![CDATA[N.]]></text></staticText>
-            <staticText><reportElement x="34" y="3" width="66" height="16"/><textElement><font isBold="true"/></textElement><text><![CDATA[Fecha]]></text></staticText>
-            <staticText><reportElement x="100" y="3" width="150" height="16"/><textElement><font isBold="true"/></textElement><text><![CDATA[Cliente]]></text></staticText>
-            <staticText><reportElement x="250" y="3" width="70" height="16"/><textElement><font isBold="true"/></textElement><text><![CDATA[Plan]]></text></staticText>
-            <staticText><reportElement x="320" y="3" width="55" height="16"/><textElement textAlignment="Right"><font isBold="true"/></textElement><text><![CDATA[Base]]></text></staticText>
-            <staticText><reportElement x="375" y="3" width="45" height="16"/><textElement textAlignment="Right"><font isBold="true"/></textElement><text><![CDATA[Desc.]]></text></staticText>
-            <staticText><reportElement x="420" y="3" width="55" height="16"/><textElement textAlignment="Right"><font isBold="true"/></textElement><text><![CDATA[Total]]></text></staticText>
-            <staticText><reportElement x="480" y="3" width="55" height="16"/><textElement><font isBold="true"/></textElement><text><![CDATA[Metodo]]></text></staticText>
-        </band>
-    </columnHeader>
-    <detail>
-        <band height="20">
-            <textField><reportElement x="4" y="2" width="30" height="16"/><textFieldExpression><![CDATA[$F{id}]]></textFieldExpression></textField>
-            <textField><reportElement x="34" y="2" width="66" height="16"/><textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression></textField>
-            <textField><reportElement x="100" y="2" width="150" height="16"/><textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression></textField>
-            <textField><reportElement x="250" y="2" width="70" height="16"/><textFieldExpression><![CDATA[$F{plan}]]></textFieldExpression></textField>
-            <textField pattern="$ #,##0.00"><reportElement x="320" y="2" width="55" height="16"/><textElement textAlignment="Right"/><textFieldExpression><![CDATA[$F{monto_base}]]></textFieldExpression></textField>
-            <textField><reportElement x="375" y="2" width="45" height="16"/><textElement textAlignment="Right"/><textFieldExpression><![CDATA[$F{porcentaje_descuento}.intValue() + "%"]]></textFieldExpression></textField>
-            <textField pattern="$ #,##0.00"><reportElement x="420" y="2" width="55" height="16"/><textElement textAlignment="Right"/><textFieldExpression><![CDATA[$F{monto_final}]]></textFieldExpression></textField>
-            <textField><reportElement x="480" y="2" width="55" height="16"/><textFieldExpression><![CDATA[$F{metodo}]]></textFieldExpression></textField>
-            <line><reportElement x="0" y="19" width="535" height="1" forecolor="#DDDDDD"/></line>
-        </band>
-    </detail>
-    <pageFooter>
-        <band height="20">
-            <textField>
-                <reportElement x="0" y="2" width="535" height="16" forecolor="#888888"/>
-                <textElement textAlignment="Right"><font size="8"/></textElement>
-                <textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER} + "  -  Generado " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
-            </textField>
-        </band>
-    </pageFooter>
-    <summary>
-        <band height="70">
-            <textField>
-                <reportElement x="300" y="10" width="235" height="18"/>
-                <textElement textAlignment="Right"><font size="11"/></textElement>
-                <textFieldExpression><![CDATA["Total sin descuento: $ " + String.format("%.2f", $V{TOTAL_BASE} == null ? 0.0 : $V{TOTAL_BASE}.doubleValue())]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="300" y="28" width="235" height="18"/>
-                <textElement textAlignment="Right"><font size="11"/></textElement>
-                <textFieldExpression><![CDATA["Descuentos por constancia: -$ " + String.format("%.2f", $V{TOTAL_BASE} == null ? 0.0 : $V{TOTAL_BASE}.subtract($V{TOTAL_FINAL}).doubleValue())]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="300" y="46" width="235" height="20" forecolor="#FF7A1A"/>
-                <textElement textAlignment="Right"><font size="13" isBold="true"/></textElement>
-                <textFieldExpression><![CDATA["INGRESOS: $ " + String.format("%.2f", $V{TOTAL_FINAL} == null ? 0.0 : $V{TOTAL_FINAL}.doubleValue())]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="0" y="10" width="290" height="18"/>
-                <textFieldExpression><![CDATA["Pagos registrados: " + $V{REPORT_COUNT}]]></textFieldExpression>
-            </textField>
-        </band>
-    </summary>
-    <noData>
-        <band height="40">
-            <staticText>
-                <reportElement x="0" y="10" width="535" height="20"/>
-                <textElement textAlignment="Center"><font size="12"/></textElement>
-                <text><![CDATA[No hay pagos registrados en ese mes]]></text>
-            </staticText>
-        </band>
-    </noData>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="fecha" class="java.lang.String"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="plan" class="java.lang.String"/>
+	<field name="monto_base" class="java.math.BigDecimal"/>
+	<field name="porcentaje_descuento" class="java.math.BigDecimal"/>
+	<field name="monto_final" class="java.math.BigDecimal"/>
+	<field name="metodo" class="java.lang.String"/>
+	<variable name="TOTAL_BASE" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{monto_base}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_FINAL" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{monto_final}]]></variableExpression>
+	</variable>
+	<title>
+		<band height="70">
+			<rectangle>
+				<reportElement x="0" y="0" width="535" height="56" backcolor="#111318" uuid="c86ebbfe-7a42-4ced-ba25-13a080b2c208"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="14" y="6" width="300" height="26" forecolor="#FF7A1A" uuid="bce76459-ff58-4f7c-bf79-fb056b072722"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOMBRE_GIMNASIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="14" y="30" width="300" height="20" forecolor="#FFFFFF" uuid="15d036c9-65ac-4422-bb3a-7ae48f8887be"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Ingresos del mes con descuentos por constancia]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="290" y="4" width="200" height="20" forecolor="#FFFFFF" uuid="b78db173-e34d-438d-b0a1-a98cfb9996c3"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Mes " + String.format("%02d", $P{MES}) + " / " + $P{ANIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="32" width="200" height="12" forecolor="#FFFFFF" uuid="ad358bf0-6cdf-4811-b81e-0504897b5f0f"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{DIRECCION_GIMNASIO}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement x="490" y="4" width="38" height="48" uuid="e308d7de-8f54-41b0-8b90-532367f86014">
+					<printWhenExpression><![CDATA[$P{LOGO_GIMNASIO} != null && !$P{LOGO_GIMNASIO}.isBlank()]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{LOGO_GIMNASIO}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="24">
+			<rectangle>
+				<reportElement x="0" y="0" width="535" height="22" backcolor="#EEEEEE" uuid="029fda63-d29a-40f0-b91d-4de51e8569a9"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="4" y="3" width="30" height="16" uuid="0e7d42e3-16c6-4acc-ace2-66f445dee85e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[N.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="34" y="3" width="66" height="16" uuid="4ac8551f-b37e-4598-9d1c-94e037379a81"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="3" width="150" height="16" uuid="c60062f7-cbce-4516-b7ea-9d3424e5f91c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="3" width="70" height="16" uuid="19df9264-63b4-4d60-a743-8659fc92b7b7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Plan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="3" width="55" height="16" uuid="bdc8c845-08c7-4589-b570-f68f643caf2e"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Base]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="375" y="3" width="45" height="16" uuid="5b6419ff-9cf3-4a97-8111-0b12826d7216"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desc.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="3" width="55" height="16" uuid="a8007096-b9c2-4ea7-bfdc-dfe502917b98"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="3" width="55" height="16" uuid="f06f409a-1127-4417-a36d-c29689c59178"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Metodo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField>
+				<reportElement x="4" y="2" width="30" height="16" uuid="9e604088-3d5d-47f0-9725-a061251b6608"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="34" y="2" width="66" height="16" uuid="c2f4e41b-6cb5-450c-a03d-3d397663221e"/>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="2" width="150" height="16" uuid="433b8b1e-7034-4948-8381-b3c4428ff386"/>
+				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="2" width="70" height="16" uuid="a33fe652-54b3-488f-8ebe-b471ee4253ec"/>
+				<textFieldExpression><![CDATA[$F{plan}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00">
+				<reportElement x="320" y="2" width="55" height="16" uuid="cdedb6ec-435e-44bf-a622-f4ea8d744823"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{monto_base}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="375" y="2" width="45" height="16" uuid="079a0abd-2ece-4be2-a87f-09ba026d4a04"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{porcentaje_descuento}.intValue() + "%"]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00">
+				<reportElement x="420" y="2" width="55" height="16" uuid="fcdbfba9-be3f-4517-862a-bd2d19a709c8"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{monto_final}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="2" width="55" height="16" uuid="559f57a0-1f2d-4108-96e0-220ed9c86658"/>
+				<textFieldExpression><![CDATA[$F{metodo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="19" width="535" height="1" forecolor="#DDDDDD" uuid="bca60fea-4dc3-4784-85fa-d871c78d42e3"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<textField>
+				<reportElement x="0" y="2" width="535" height="16" forecolor="#888888" uuid="a0198937-4d20-4379-bf62-db4fa20e928c"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER} + "  -  Generado " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="70">
+			<textField>
+				<reportElement x="300" y="10" width="235" height="18" uuid="8982cfc4-a0d6-45e1-a36a-32c1b7d5ea91"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total sin descuento: $ " + String.format("%.2f", $V{TOTAL_BASE} == null ? 0.0 : $V{TOTAL_BASE}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="28" width="235" height="18" uuid="bc5da157-1861-4110-9a51-4c8351e2b215"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Descuentos por constancia: -$ " + String.format("%.2f", $V{TOTAL_BASE} == null ? 0.0 : $V{TOTAL_BASE}.subtract($V{TOTAL_FINAL}).doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="46" width="235" height="20" forecolor="#FF7A1A" uuid="adddc90f-62ab-46ac-8cc8-d7493f241d1c"/>
+				<textElement textAlignment="Right">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["INGRESOS: $ " + String.format("%.2f", $V{TOTAL_FINAL} == null ? 0.0 : $V{TOTAL_FINAL}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="10" width="290" height="18" uuid="53cd3b87-2e41-41f1-83ed-c6a47a662ed5"/>
+				<textFieldExpression><![CDATA["Pagos registrados: " + $V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+	<noData>
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="10" width="535" height="20" uuid="0c3bc44d-1236-47dd-9813-023d72351d57"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[No hay pagos registrados en ese mes]]></text>
+			</staticText>
+		</band>
+	</noData>
 </jasperReport>
