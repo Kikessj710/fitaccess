@@ -6,6 +6,7 @@ import com.mycompany.fitaccess.hardware.ArduinoPuerto;
 import com.mycompany.fitaccess.hardware.ReconocedorFacial;
 import com.mycompany.fitaccess.modelo.Admin;
 import com.mycompany.fitaccess.servicio.AccesoService;
+import com.mycompany.fitaccess.servicio.ConfiguracionService;
 import com.mycompany.fitaccess.util.Conexion;
 import com.mycompany.fitaccess.util.Estilo;
 import com.mycompany.fitaccess.util.Hash;
@@ -20,6 +21,7 @@ public class App {
 
         if (Conexion.probar()) {
             crearAdminPorDefecto();
+            ConfiguracionService.cargar();
             new AccesoService().iniciarCierreAutomatico();
         } else {
             Estilo.error(null, "No hay conexion con MySQL.\n"
