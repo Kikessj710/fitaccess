@@ -1,4 +1,5 @@
 package com.mycompany.fitaccess.util;
+import java.time.LocalDate;
 
 /** Validaciones de los formularios. */
 public final class Validaciones {
@@ -55,4 +56,57 @@ public final class Validaciones {
     public static boolean enRango(Double valor, double min, double max) {
         return valor != null && valor >= min && valor <= max;
     }
+    
+    public static boolean textoObligatorio(String texto) {
+    return texto != null && !texto.trim().isEmpty();
+}
+
+public static boolean usuarioValido(String usuario) {
+    return usuario != null
+            && usuario.matches("[A-Za-z0-9_]{4,30}");
+}
+
+public static boolean claveValida(String clave) {
+    return clave != null && clave.length() >= 8;
+}
+
+public static boolean enteroPositivo(String texto) {
+    if (texto == null || !texto.trim().matches("\\d+")) {
+        return false;
+    }
+
+    try {
+        return Integer.parseInt(texto.trim()) > 0;
+    } catch (NumberFormatException e) {
+        return false;
+    }
+}
+
+public static boolean precioValido(String texto) {
+    Double precio = decimal(texto);
+    return precio != null && precio > 0 && precio <= 100000;
+}
+
+public static boolean fechaNoFutura(LocalDate fecha) {
+    return fecha != null && !fecha.isAfter(LocalDate.now());
+}
+
+public static boolean rangoFechasValido(
+        LocalDate inicio,
+        LocalDate fin) {
+    return inicio != null
+            && fin != null
+            && !fin.isBefore(inicio);
+}
+
+public static boolean metodoPagoValido(String metodo) {
+    return metodo != null
+            && (
+                metodo.equals("Efectivo")
+                || metodo.equals("Transferencia")
+                || metodo.equals("Tarjeta")
+            );
+}
+
+    
 }
