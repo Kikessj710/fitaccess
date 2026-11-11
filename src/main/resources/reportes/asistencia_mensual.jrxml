@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="asistencia_mensual" pageWidth="595" pageHeight="842" columnWidth="535"
+              leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30">
+    <parameter name="MES" class="java.lang.Integer"/>
+    <parameter name="ANIO" class="java.lang.Integer"/>
+    <parameter name="NOMBRE_GIMNASIO" class="java.lang.String"/>
+    <parameter name="DIRECCION_GIMNASIO" class="java.lang.String"/>
+    <parameter name="TELEFONO_GIMNASIO" class="java.lang.String"/>
+    <parameter name="CORREO_GIMNASIO" class="java.lang.String"/>
+    <parameter name="LOGO_GIMNASIO" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[SELECT c.cedula,
+       CONCAT(c.nombres, ' ', c.apellidos) AS cliente,
+       CAST(COUNT(DISTINCT a.fecha) AS SIGNED) AS dias,
+       CAST(COALESCE(SUM(a.duracion_minutos), 0) AS SIGNED) AS minutos
+FROM cliente c
+JOIN asistencia a ON a.cliente_id = c.id
+WHERE MONTH(a.fecha) = $P{MES} AND YEAR(a.fecha) = $P{ANIO}
+GROUP BY c.id, c.cedula, c.nombres, c.apellidos
+ORDER BY dias DESC, minutos DESC]]>
+    </queryString>
+    <field name="cedula" class="java.lang.String"/>
+    <field name="cliente" class="java.lang.String"/>
+    <field name="dias" class="java.lang.Long"/>
+    <field name="minutos" class="java.lang.Long"/>
+    <variable name="TOTAL_MIN" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{minutos}]]></variableExpression>
+    </variable>
+    <variable name="TOTAL_VISITAS" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{dias}]]></variableExpression>
+    </variable>
+    <title>
+        <band height="70">
+            <rectangle>
+                <reportElement x="0" y="0" width="535" height="56" backcolor="#111318"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <textField>
+                <reportElement x="14" y="6" width="300" height="26" forecolor="#FF7A1A"/>
+                <textElement><font size="18" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{NOMBRE_GIMNASIO}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="14" y="30" width="300" height="20" forecolor="#FFFFFF"/>
+                <textElement><font size="11"/></textElement>
+                <text><![CDATA[Asistencia mensual por cliente]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="320" y="8" width="200" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Right"><font size="12" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA["Mes " + String.format("%02d", $P{MES}) + " / " + $P{ANIO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="320" y="30" width="200" height="16" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Right"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$P{DIRECCION_GIMNASIO}]]></textFieldExpression>
+            </textField>
+            <image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+                <reportElement x="490" y="4" width="38" height="48">
+                    <printWhenExpression><![CDATA[$P{LOGO_GIMNASIO} != null && !$P{LOGO_GIMNASIO}.isBlank()]]></printWhenExpression>
+                </reportElement>
+                <imageExpression><![CDATA[$P{LOGO_GIMNASIO}]]></imageExpression>
+            </image>
+        </band>
+    </title>
+    <columnHeader>
+        <band height="24">
+            <rectangle>
+                <reportElement x="0" y="0" width="535" height="22" backcolor="#EEEEEE"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="6" y="3" width="90" height="16"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[Cedula]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="100" y="3" width="200" height="16"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[Cliente]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="300" y="3" width="60" height="16"/>
+                <textElement textAlignment="Center"><font isBold="true"/></textElement>
+                <text><![CDATA[Dias]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="360" y="3" width="85" height="16"/>
+                <textElement textAlignment="Center"><font isBold="true"/></textElement>
+                <text><![CDATA[Horas totales]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="445" y="3" width="85" height="16"/>
+                <textElement textAlignment="Center"><font isBold="true"/></textElement>
+                <text><![CDATA[Promedio/dia]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="6" y="2" width="90" height="16"/>
+                <textFieldExpression><![CDATA[$F{cedula}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="100" y="2" width="200" height="16"/>
+                <textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="300" y="2" width="60" height="16"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{dias}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="360" y="2" width="85" height="16"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[String.format("%d h %02d min", $F{minutos} / 60, $F{minutos} % 60)]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="445" y="2" width="85" height="16"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[($F{dias} == 0 ? 0 : $F{minutos} / $F{dias}) + " min"]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="19" width="535" height="1" forecolor="#DDDDDD"/>
+            </line>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="20">
+            <textField>
+                <reportElement x="0" y="2" width="535" height="16" forecolor="#888888"/>
+                <textElement textAlignment="Right"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER} + "  -  Generado " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="50">
+            <textField>
+                <reportElement x="0" y="14" width="535" height="20"/>
+                <textElement><font size="11" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA["Clientes que asistieron: " + $V{REPORT_COUNT} + "     Visitas (dias-cliente): " + ($V{TOTAL_VISITAS} == null ? 0 : $V{TOTAL_VISITAS}) + "     Horas totales: " + ($V{TOTAL_MIN} == null ? 0 : $V{TOTAL_MIN} / 60)]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+    <noData>
+        <band height="40">
+            <staticText>
+                <reportElement x="0" y="10" width="535" height="20"/>
+                <textElement textAlignment="Center"><font size="12"/></textElement>
+                <text><![CDATA[No hay asistencias registradas en ese mes]]></text>
+            </staticText>
+        </band>
+    </noData>
+</jasperReport>
